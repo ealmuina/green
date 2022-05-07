@@ -39,6 +39,9 @@ class Node(models.Model):
     def is_active(self):
         return self.last_seen and self.last_seen > timezone.now() - timedelta(hours=2)
 
+    def __str__(self):
+        return self.chip_id
+
 
 class Record(models.Model):
     node = models.ForeignKey(Node, on_delete=models.CASCADE, related_name='records')

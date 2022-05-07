@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="center jumbotron bg-light p-5 rounded">
+        <h1>Welcome to Green</h1>
+        <h2>
+            This is the home page for my automatic plant watering system.
+        </h2>
+    </div>
+    <img src="{% static 'img/green_logo.png' %}" alt="Green logo" width="100">
+{% endblock %}
