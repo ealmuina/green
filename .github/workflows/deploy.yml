@@ -1,0 +1,64 @@
+name: deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  #  run-tests:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #      - uses: ./.github/set-environment
+  #        with:
+  #          secret_key: ${{ secrets.SECRET_KEY }}
+  #
+  #      - name: Build Docker image
+  #        run: docker-compose build
+  #
+  #      - name: Apply migrations to test DB
+  #        run: docker-compose run celery python manage.py migrate
+  #
+  #      - name: Execute tests
+  #        run: docker-compose -f docker-compose.dev.yml run -e "RAILS_ENV=test" web rake test
+
+  deploy:
+    #    needs: run-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/set-environment
+        with:
+          secret_key: ${{ secrets.SECRET_KEY }}
+
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            # Turn service off
+            cd green
+            sudo systemctl stop green.service
+            
+            # Pull new code
+            git stash
+            git checkout main
+            git pull
+            
+            # Create .env file
+            touch .env
+            echo SECRET_TOKEN=${{ secrets.SECRET_TOKEN }} > .env
+            echo MQTT_BROKER_HOST=${{ secrets.MQTT_BROKER_HOST }} >> .env
+            echo MQTT_BROKER_PORT=${{ secrets.MQTT_BROKER_PORT }} >> .env
+            
+            # Build containers
+            docker-compose build
+            
+            # Apply database migrations
+            docker-compose run celery python manage.py migrate
+            
+            # Turn service on
+            sudo systemctl start green.service

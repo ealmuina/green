@@ -1,0 +1,19 @@
+#name: run-tests
+#on: [ pull_request ]
+#jobs:
+#  run-tests:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: ./.github/set-environment
+#        with:
+#          secret-token: ${{ secrets.SECRET_TOKEN }}
+#
+#      - name: Build Docker image
+#        run: docker-compose -f docker-compose.dev.yml build
+#
+#      - name: Apply migrations to test DB
+#        run: docker-compose -f docker-compose.dev.yml run -e "RAILS_ENV=test" web rails db:migrate
+#
+#      - name: Execute tests
+#        run: docker-compose -f docker-compose.dev.yml run -e "RAILS_ENV=test" web rake test
