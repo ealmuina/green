@@ -13,7 +13,6 @@ django-appconf==1.0.5
 django-compressor==4.0
 django-libsass==0.9
 kombu==5.2.4
-libsass==0.21.0
 packaging==21.3
 paho-mqtt==1.6.1
 prompt-toolkit==3.0.29
