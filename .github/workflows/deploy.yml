@@ -50,7 +50,7 @@ jobs:
             
             # Create .env file
             touch .env
-            echo SECRET_TOKEN=${{ secrets.SECRET_TOKEN }} > .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} > .env
             echo MQTT_BROKER_HOST=${{ secrets.MQTT_BROKER_HOST }} >> .env
             echo MQTT_BROKER_PORT=${{ secrets.MQTT_BROKER_PORT }} >> .env
             
