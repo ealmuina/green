@@ -33,7 +33,7 @@ class Node(models.Model):
 
     @property
     def last_seen(self):
-        return self.records.values_list('created_at', flat=True).last()
+        return self.records.values_list('date', flat=True).last()
 
     @property
     def is_active(self):

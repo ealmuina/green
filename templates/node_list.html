@@ -1,0 +1,36 @@
+{% extends '_base.html' %}
+
+{% block title %}Plants{% endblock %}
+
+{% block content %}
+    <h1>Plants</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Type</th>
+                <th scope="col">Min. moisture</th>
+                <th scope="col">Max. moisture</th>
+                <th scope="col">Current moisture</th>
+                <th scope="col">Active?</th>
+                <th scope="col">Open?</th>
+                <th scope="col">Last seen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for node in object_list %}
+                <tr>
+                    <th scope="row"><a href="{% url 'node_detail' node.id %}">{{ node.chip_id }}</a></th>
+                    <td>{{ node.get_node_type_display }}</td>
+                    <td>{{ node.min_moisture }}</td>
+                    <td>{{ node.max_moisture }}</td>
+                    <td>{{ node.current_moisture }}</td>
+                    <td><i class="bi bi-circle-fill" style="color: {% if node.is_active %}green{% else %}red{% endif %}"></i></td>
+                    <td><i class="bi bi-circle-fill" style="color: {% if node.is_open %}green{% else %}red{% endif %}"></i></td>
+                    <td>{{ node.last_seen }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
