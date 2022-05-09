@@ -25,15 +25,15 @@ def on_message(client, userdata, message):
 
 
 def main():
-    # Create mqtt_client
-    mqtt_client = mqtt.Client()
-    mqtt_client.on_message = on_message
+    # Create client
+    client = mqtt.Client()
+    client.on_message = on_message
 
     # Connect to broker
-    mqtt_client.connect(os.environ['MQTT_BROKER_HOST'], int(os.environ['MQTT_BROKER_PORT']))
-    mqtt_client.subscribe('green/record')
+    client.connect(os.environ['MQTT_BROKER_HOST'], int(os.environ['MQTT_BROKER_PORT']))
+    client.subscribe('green/record')
 
-    mqtt_client.loop_forever()
+    client.loop_forever()
 
 
 if __name__ == '__main__':

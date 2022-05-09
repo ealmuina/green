@@ -2,6 +2,7 @@ import os
 
 import django
 from celery import Celery
+from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'green.settings')
 django.setup()
@@ -13,9 +14,9 @@ app = Celery(
 )
 
 app.conf.beat_schedule = {
-    # 'poll-records': {
-    #     'task': 'tasks.poll_records',
-    #     'schedule': crontab(minute='*/10')
-    # }
+    'refresh-node-settings': {
+        'task': 'tasks.refresh_node_settings',
+        'schedule': crontab(hour='1')
+    }
 }
-app.conf.task_time_limit = 1800  # timeout after 30 minutes
+app.conf.task_time_limit = 3600  # timeout after 1 hour
