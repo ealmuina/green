@@ -15,7 +15,7 @@ app = Celery(
 
 app.conf.beat_schedule = {
     'refresh-node-settings': {
-        'task': 'tasks.refresh_node_settings',
+        'task': 'web.tasks.refresh_node_settings',
         'schedule': crontab(hour='1')
     }
 }

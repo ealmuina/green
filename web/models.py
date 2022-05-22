@@ -51,7 +51,13 @@ class Record(models.Model):
 
 class Firmware(models.Model):
     node_type = models.IntegerField(choices=Node.TYPE_CHOICES)
-    version = models.IntegerField()
+    version = models.IntegerField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    file = models.FileField(upload_to='firmware')
+    file = models.FileField(upload_to='media/firmware')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.get_node_type_display().lower()}_v{self.version}'
