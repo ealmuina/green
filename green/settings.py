@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['green.ealmuina.xyz', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = ['https://green.ealmuina.xyz']
+
 # Application definition
 
 INSTALLED_APPS = [
