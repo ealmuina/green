@@ -16,7 +16,7 @@ services:
       context: .
     volumes:
       - .:/usr/src/app
-    command: python -m monitor.mqtt_daemon
+    command: python -u -m monitor.mqtt_daemon
   redis:
     image: redis
   celery:

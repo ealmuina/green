@@ -70,6 +70,7 @@ def on_message(client, userdata, message):
                     if record.moisture < node.min_moisture:
                         start_pumping(client, node)
                         Node.objects.filter(id__in=(node.id, node.pump.id)).update(is_open=True)
+
                     if record.moisture > node.max_moisture:
                         stop_pumping(client, node)
                         Node.objects.filter(id__in=(node.id, node.pump.id)).update(is_open=False)
@@ -84,10 +85,16 @@ def main():
     client.connect(os.environ['MQTT_BROKER_HOST'], int(os.environ['MQTT_BROKER_PORT']))
     client.subscribe('green/record')
 
+    logging.info('Monitor started')
+
     client.loop_forever()
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='[%(asctime)s] %(levelname)s: %(message)s',
+        level=logging.INFO
+    )
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'green.settings')
     django.setup()
     main()
