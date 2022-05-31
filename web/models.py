@@ -39,6 +39,11 @@ class Node(models.Model):
     def is_active(self):
         return self.last_seen and self.last_seen > timezone.now() - timedelta(hours=2)
 
+    def save(self, *args, **kwargs):
+        from web.tasks import refresh_node_settings
+        refresh_node_settings.delay(node_ids=[self.id])
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.chip_id
 

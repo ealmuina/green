@@ -8,11 +8,15 @@ from web.models import Node
 
 
 @app.task(ignore_result=True)
-def refresh_node_settings():
+def refresh_node_settings(node_ids=None):
     client = mqtt.Client()
     client.connect(os.environ['MQTT_BROKER_HOST'], int(os.environ['MQTT_BROKER_PORT']))
 
-    for node in Node.objects.filter(node_type__in=(Node.TYPE_FULL, Node.TYPE_VALVE)):
+    node_qs = Node.objects.filter(node_type__in=(Node.TYPE_FULL, Node.TYPE_VALVE))
+    if node_ids:
+        node_qs = node_qs.filter(id__in=node_ids)
+
+    for node in node_qs:
         client.publish(
             f"green/settings/{node.chip_id}",
             json.dumps({
