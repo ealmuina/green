@@ -100,6 +100,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+BASICAUTH_USERS = {
+    os.environ.get('FIRMWARE_USERNAME'): os.environ.get('FIRMWARE_PASSWORD')
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 

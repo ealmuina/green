@@ -1,11 +1,30 @@
+from basicauth.decorators import basic_auth_required
+from django.http import FileResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
-from web.models import Node
+from web.models import Node, Firmware
 
 
 def index(request):
     return render(request, 'index.html')
+
+
+@basic_auth_required
+def firmware(request, node_type):
+    current_version = request.META.get('HTTP_X_ESP8266_VERSION')
+    try:
+        new_firmware = Firmware.objects.filter(
+            node_type=node_type,
+            version__gt=current_version
+        ).order_by('version').last()
+        if new_firmware:
+            return FileResponse(
+                open(new_firmware.file.path, 'rb')
+            )
+        return HttpResponse(status=304)
+    except:
+        return HttpResponseBadRequest()
 
 
 class NodeListView(ListView):

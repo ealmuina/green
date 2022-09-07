@@ -56,10 +56,13 @@ class Record(models.Model):
 
 class Firmware(models.Model):
     node_type = models.IntegerField(choices=Node.TYPE_CHOICES)
-    version = models.IntegerField(unique=True)
+    version = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    file = models.FileField(upload_to='media/firmware')
+    file = models.FileField(upload_to='firmware')
+
+    class Meta:
+        unique_together = ('node_type', 'version')
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
