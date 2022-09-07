@@ -53,7 +53,6 @@ jobs:
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} > secrets.env
             echo MQTT_BROKER_HOST=${{ secrets.MQTT_BROKER_HOST }} >> secrets.env
             echo MQTT_BROKER_PORT=${{ secrets.MQTT_BROKER_PORT }} >> secrets.env
-            echo FIRMWARE_USERNAME=${{ secrets.FIRMWARE_USERNAME }} >> secrets.env
             echo FIRMWARE_PASSWORD=${{ secrets.FIRMWARE_PASSWORD }} >> secrets.env
             
             # Build containers
