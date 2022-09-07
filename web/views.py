@@ -1,5 +1,6 @@
-from basicauth.decorators import basic_auth_required
-from django.http import FileResponse, HttpResponse, HttpResponseBadRequest
+import os
+
+from django.http import FileResponse, HttpResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
@@ -10,10 +11,10 @@ def index(request):
     return render(request, 'index.html')
 
 
-@basic_auth_required
 def firmware(request, node_type):
-    current_version = request.META.get('HTTP_X_ESP8266_VERSION')
     try:
+        password, current_version = request.META.get('HTTP_X_ESP8266_VERSION').split('&')
+        assert password == os.environ.get('FIRMWARE_PASSWORD')
         new_firmware = Firmware.objects.filter(
             node_type=node_type,
             version__gt=current_version
@@ -24,7 +25,7 @@ def firmware(request, node_type):
             )
         return HttpResponse(status=304)
     except:
-        return HttpResponseBadRequest()
+        return HttpResponseForbidden()
 
 
 class NodeListView(ListView):
