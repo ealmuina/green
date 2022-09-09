@@ -93,4 +93,4 @@ jobs:
             done
             
             # Delete old pods
-            kubectl delete pods -l app=green
+            kubectl delete replicaset -l app=green
