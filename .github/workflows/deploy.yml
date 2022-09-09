@@ -72,6 +72,10 @@ jobs:
           script: |
             cd green
             
+            # Delete deployments and services
+            kubectl delete deployments -l app=green
+            kubectl delete services -l app=green
+            
             # Pull new code
             git stash
             git checkout main
