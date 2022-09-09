@@ -21,3 +21,10 @@ spec:
             - secretRef:
                 name: green-secrets
           command: [ "celery", "-A", "web.tasks", "worker", "-l", "info" ]
+          volumeMounts:
+            - mountPath: /app/db
+              name: sqlite-volume
+      volumes:
+        - name: sqlite-volume
+          persistentVolumeClaim:
+            claimName: sqlite-pvc
