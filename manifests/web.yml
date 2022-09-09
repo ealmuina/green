@@ -27,7 +27,7 @@ spec:
       volumes:
         - name: web
           hostPath:
-            path: "{{ HOME }}/green"
+            path: /home/eddy/green
             type: Directory
 
 ---
