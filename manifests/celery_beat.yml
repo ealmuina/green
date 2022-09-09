@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-celery-beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: green
+      component: celery-beat
+  template:
+    metadata:
+      labels:
+        app: green
+        component: celery-beat
+    spec:
+      containers:
+        - name: celery-beat
+          image: ealmuina/green:latest
+          envFrom:
+            - secretRef:
+                name: green-secrets
+          command: [ "celery", "-A", "web.tasks", "beat", "-l", "info" ]

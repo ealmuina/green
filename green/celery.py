@@ -9,8 +9,8 @@ django.setup()
 
 app = Celery(
     'tasks',
-    broker='redis://redis:6379/0',
-    backend='redis://redis:6379/0'
+    broker='redis://green-redis:6379/0',
+    backend='redis://green-redis:6379/0'
 )
 
 app.conf.beat_schedule = {

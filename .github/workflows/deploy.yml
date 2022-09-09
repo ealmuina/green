@@ -21,8 +21,39 @@ jobs:
   #      - name: Execute tests
   #        run: docker-compose -f docker-compose.dev.yml run -e "RAILS_ENV=test" web rake test
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/set-environment
+        with:
+          secret_key: ${{ secrets.SECRET_KEY }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ealmuina/green:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
   deploy:
-    #    needs: run-tests
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -39,9 +70,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            # Turn service off
             cd green
-            sudo systemctl stop green.service
             
             # Pull new code
             git stash
@@ -55,11 +84,13 @@ jobs:
             echo MQTT_BROKER_PORT=${{ secrets.MQTT_BROKER_PORT }} >> secrets.env
             echo FIRMWARE_PASSWORD=${{ secrets.FIRMWARE_PASSWORD }} >> secrets.env
             
+            # Create k8s secrets
+            kubectl create secret generic green-secrets --from-env-file=secrets.env
+            
             # Build containers
-            docker-compose build
+            for file in manifests/*; do
+              kubectl apply -f $file
+            done
             
-            # Apply database migrations
-            docker-compose run celery python manage.py migrate
-            
-            # Turn service on
-            sudo systemctl start green.service
+            # Delete old pods
+            kubectl delete replicaset -l app=green
