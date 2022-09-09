@@ -22,13 +22,12 @@ spec:
                 name: green-secrets
           command: [ "./run_web.sh" ]
           volumeMounts:
-            - mountPath: /app
-              name: web
+            - mountPath: /app/db
+              name: sqlite-volume
       volumes:
-        - name: web
-          hostPath:
-            path: /home/eddy/green
-            type: Directory
+        - name: sqlite-volume
+          persistentVolumeClaim:
+            claimName: sqlite-pvc
 
 ---
 

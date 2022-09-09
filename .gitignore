@@ -1,7 +1,7 @@
 .idea/
 static/CACHE/
 media/
+db/
 
 secrets.env
-db.sqlite3
 celerybeat-schedule
