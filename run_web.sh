@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # migrate db, so we have the latest db schema
 python manage.py migrate
 echo "Migrated DB to latest version"
