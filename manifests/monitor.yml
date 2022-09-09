@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-monitor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitor
+  template:
+    metadata:
+      labels:
+        app: monitor
+    spec:
+      containers:
+        - name: monitor
+          image: ealmuina/green:latest
+          envFrom:
+            - secretRef:
+                name: green-secrets
+          command: [ "python" ]
+          arguments: [ "-u", "-m", "monitor.mqtt_daemon" ]

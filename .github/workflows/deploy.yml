@@ -39,9 +39,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            # Turn service off
             cd green
-            sudo systemctl stop green.service
             
             # Pull new code
             git stash
@@ -55,11 +53,10 @@ jobs:
             echo MQTT_BROKER_PORT=${{ secrets.MQTT_BROKER_PORT }} >> secrets.env
             echo FIRMWARE_PASSWORD=${{ secrets.FIRMWARE_PASSWORD }} >> secrets.env
             
+            # Create k8s secrets
+            kubectl create secret green-secrets --from-env-file=secrets.env
+            
             # Build containers
-            docker-compose build
-            
-            # Apply database migrations
-            docker-compose run celery python manage.py migrate
-            
-            # Turn service on
-            sudo systemctl start green.service
+            for file in manifests/*; do
+              kubectl apply -f file
+            done
