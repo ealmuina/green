@@ -18,5 +18,4 @@ spec:
           envFrom:
             - secretRef:
                 name: green-secrets
-          command: [ "celery" ]
-          arguments: [ "-A", "web.tasks", "beat", "-l", "info" ]
+          command: [ "celery", "-A", "web.tasks", "beat", "-l", "info" ]

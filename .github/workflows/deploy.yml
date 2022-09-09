@@ -21,8 +21,36 @@ jobs:
   #      - name: Execute tests
   #        run: docker-compose -f docker-compose.dev.yml run -e "RAILS_ENV=test" web rake test
 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/set-environment
+        with:
+          secret_key: ${{ secrets.SECRET_KEY }}
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image and push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: .
+          # Note: tags has to be all lower-case
+          tags: |
+            ealmuina/green:latest
+          # build on feature branches, push only on main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
   deploy:
-    #    needs: run-tests
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -54,9 +82,9 @@ jobs:
             echo FIRMWARE_PASSWORD=${{ secrets.FIRMWARE_PASSWORD }} >> secrets.env
             
             # Create k8s secrets
-            kubectl create secret green-secrets --from-env-file=secrets.env
+            kubectl create secret generic green-secrets --from-env-file=secrets.env
             
             # Build containers
             for file in manifests/*; do
-              kubectl apply -f file
+              kubectl apply -f $file
             done

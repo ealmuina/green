@@ -18,5 +18,4 @@ spec:
           envFrom:
             - secretRef:
                 name: green-secrets
-          command: [ "python" ]
-          arguments: [ "-u", "-m", "monitor.mqtt_daemon" ]
+          command: [ "python", "-u", "-m", "monitor.mqtt_daemon" ]
