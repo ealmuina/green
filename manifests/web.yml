@@ -27,7 +27,7 @@ spec:
       volumes:
         - name: web
           hostPath:
-            path: "~/green"
+            path: "{{ HOME }}/green"
             type: Directory
 
 ---
