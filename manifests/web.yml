@@ -21,6 +21,14 @@ spec:
             - secretRef:
                 name: green-secrets
           command: [ "./run_web.sh" ]
+          volumeMounts:
+            - mountPath: /app
+              name: web
+      volumes:
+        - name: web
+          hostPath:
+            path: "~/green"
+            type: Directory
 
 ---
 
