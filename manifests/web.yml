@@ -6,11 +6,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: green
+      component: web
   template:
     metadata:
       labels:
-        app: web
+        app: green
+        component: web
     spec:
       containers:
         - name: web
@@ -33,4 +35,5 @@ spec:
       targetPort: 8000
       nodePort: 8000
   selector:
-    app: web
+    app: green
+    component: web

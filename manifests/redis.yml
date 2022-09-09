@@ -6,11 +6,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: green
+      component: redis
   template:
     metadata:
       labels:
-        app: redis
+        app: green
+        component: redis
     spec:
       containers:
         - name: redis
@@ -28,4 +30,5 @@ spec:
     - name: redis
       port: 6379
   selector:
-    app: redis
+    app: green
+    component: redis

@@ -6,11 +6,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: celery
+      app: green
+      component: celery
   template:
     metadata:
       labels:
-        app: celery
+        app: green
+        component: celery
     spec:
       containers:
         - name: celery
