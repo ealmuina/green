@@ -86,6 +86,7 @@ jobs:
             echo IPINFO_TOKEN=${{ secrets.IPINFO_TOKEN }} >> secrets.env
             
             # Create k8s secrets
+            kubectl delete secret green-secrets
             kubectl create secret generic green-secrets --from-env-file=secrets.env
             
             # Build containers
