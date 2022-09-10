@@ -25,7 +25,7 @@ class Node(models.Model):
 
     min_moisture = models.IntegerField(null=True, blank=True)
     max_moisture = models.IntegerField(null=True, blank=True)
-    max_open_time = models.IntegerField(default=30)
+    max_open_time = models.IntegerField(default=10000)  # in milliseconds
 
     @property
     def current_moisture(self):
