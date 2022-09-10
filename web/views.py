@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 
 from web.models import Node, Firmware
+from web.utils import get_timezone
 
 
 def index(request):
@@ -32,6 +33,15 @@ class NodeListView(ListView):
     model = Node
     template_name = 'node_list.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(object_list=object_list, **kwargs)
+
+        # Add user timezone
+        context['user_timezone'] = get_timezone(self.request)
+
+        return context
+
 
 class NodeDetailView(DetailView):
     model = Node
@@ -47,5 +57,8 @@ class NodeDetailView(DetailView):
             lambda record: [record[0].timestamp() * 1000, record[1]],
             self.object.records.values_list('date', 'moisture')
         ))
+
+        # Add user timezone
+        context['user_timezone'] = get_timezone(self.request)
 
         return context

@@ -83,6 +83,7 @@ jobs:
             echo MQTT_BROKER_HOST=${{ secrets.MQTT_BROKER_HOST }} >> secrets.env
             echo MQTT_BROKER_PORT=${{ secrets.MQTT_BROKER_PORT }} >> secrets.env
             echo FIRMWARE_PASSWORD=${{ secrets.FIRMWARE_PASSWORD }} >> secrets.env
+            echo IPINFO_TOKEN=${{ secrets.IPINFO_TOKEN }} >> secrets.env
             
             # Create k8s secrets
             kubectl create secret generic green-secrets --from-env-file=secrets.env
