@@ -30,20 +30,25 @@
                     "yAxis": {
                         "title": {"text": "Soil moisture"},
                         "plotLines": [
-                            {
-                                "value": {{ node.max_moisture }},
-                                "color": "green",
-                                "dashStyle": "shortdash",
-                                "width": 2,
-                                "label": {"text": "Max. moisture"}
-                            },
-                            {
-                                "value": {{ node.min_moisture }},
-                                "color": "red",
-                                "dashStyle": "shortdash",
-                                "width": 2,
-                                "label": {"text": "Min. moisture"}
-                            }],
+                            {% if node.max_moisture %}
+                                {
+                                    "value": {{ node.max_moisture }},
+                                    "color": "green",
+                                    "dashStyle": "shortdash",
+                                    "width": 2,
+                                    "label": {"text": "Max. moisture"}
+                                },
+                            {% endif %}
+                            {%  if node.min_moisture %}
+                                {
+                                    "value": {{ node.min_moisture }},
+                                    "color": "red",
+                                    "dashStyle": "shortdash",
+                                    "width": 2,
+                                    "label": {"text": "Min. moisture"}
+                                }
+                            {% endif %}
+                        ],
                         "min": -900,
                         "max": -250
                     },
