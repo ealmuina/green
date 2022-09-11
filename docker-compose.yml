@@ -17,7 +17,7 @@ services:
     volumes:
       - .:/app
     command: python -u -m monitor.mqtt_daemon
-  redis:
+  green-redis:
     image: redis
   celery:
     env_file:
@@ -27,7 +27,7 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - redis
+      - green-redis
     command: celery -A web.tasks worker -l info
   celery-beat:
     env_file:
@@ -37,5 +37,5 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - redis
+      - green-redis
     command: celery -A web.tasks beat -l info

@@ -67,11 +67,11 @@ def on_message(client, userdata, message):
                     node.save()
 
                 case Node.TYPE_VALVE:
-                    if record.moisture < node.min_moisture:
+                    if node.min_moisture and record.moisture < node.min_moisture:
                         start_pumping(client, node)
                         Node.objects.filter(id__in=(node.id, node.pump.id)).update(is_open=True)
 
-                    if record.moisture > node.max_moisture:
+                    if node.max_moisture and record.moisture > node.max_moisture:
                         stop_pumping(client, node)
                         Node.objects.filter(id__in=(node.id, node.pump.id)).update(is_open=False)
 
