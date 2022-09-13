@@ -9,8 +9,11 @@ def get_timezone(request):
     ipinfo_token = os.environ.get('IPINFO_TOKEN')
 
     if all((client_ip, is_routable, ipinfo_token)):
-        handler = ipinfo.getHandler(ipinfo_token)
-        details = handler.getDetails(client_ip)
-        return details.timezone
+        try:
+            handler = ipinfo.getHandler(ipinfo_token)
+            details = handler.getDetails(client_ip)
+            return details.timezone
+        except:
+            pass
 
     return 'UTC'
